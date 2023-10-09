@@ -31,7 +31,6 @@ def get_address(resource):
 
 
 def get_stores():
-    #return json.load(open("../backend/stores.json"))["data"]
     stores_url = get_address(URL_STORES)
     resp = requests.get(stores_url)
     if resp.status_code != 200:
@@ -41,12 +40,6 @@ def get_stores():
 
 
 def get_sales(store=None, sku=None):
-    data = json.load(open("../backend/sales.json"))["data"]
-    if store is not None:
-        data = [el for el in data if el["store"] == store]
-    if sku is not None:
-        data = [el for el in data if el["sku"] == sku]
-    return data
     sale_url = get_address(URL_SALES)
     params = {}
     if store is not None:
@@ -61,7 +54,6 @@ def get_sales(store=None, sku=None):
 
 
 def get_categs_info():
-    #return {el["sku"]: el for el in json.load(open("../backend/categories.json"))["data"]}
     categs_url = get_address(URL_CATEGORIES)
     resp = requests.get(categs_url)
     if resp.status_code != 200:
