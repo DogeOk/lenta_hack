@@ -11,6 +11,7 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     :params store_info: характеристики магазина
     """
     # Загрузка датафреймов
+    pd.set_option('display.max_columns', None)
     sales_df = pd.DataFrame(sales).drop(
         columns=['sales_units_promo', 'sales_rub_promo']
     )
@@ -18,8 +19,7 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
         columns=['year', 'day', 'weekday', 'calday', 'covid']
     )
     #holiday_df['date'] = pd.to_datetime(holiday_df['date'])
-    holiday_df['date'] = pd.to_datetime(holiday_df['date'], format="%m.%d.%Y", errors='coerce')
-
+    holiday_df['date'] = pd.to_datetime(holiday_df['date'])
     mapping = pd.read_csv('./mapping.csv')
     model_input = pd.DataFrame({
         'store': [store_info['store']] * 14,
@@ -73,19 +73,22 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     else:
         model_input['st_sku_interaction'] = mapping['st_sku_interaction'].max() + 1
     # Загрузка модели и итеративное предсказание
+    iteration = model_input.iloc[-14:, :]
+    model_input = model_input.iloc[:-14, :]
     model = joblib.load('./lgbm.sav')
-    for i in range(14, 0, -1):
-        predicted = model.predict([model_input.drop(
-            columns=['store', 'sku', 'date', 'sales_units', 'sales_rub']
-        ).iloc[-i, :]])[0]
-        sales_units = list(model_input['sales_units'])
-        sales_units[-i] = round(predicted)
-        model_input['sales_units'] = sales_units
+    for i in range(14):
+        model_input = pd.concat([model_input, iteration.iloc[i:i+1, :]], axis=0)
         model_input = create_date_features(model_input)
         model_input = create_lag_features(model_input)
         model_input = create_rolling_features(model_input)
         model_input = create_expanding_features(model_input)
         model_input = fillna_lag_rolling_features(model_input)
+        predicted = model.predict([model_input.drop(
+            columns=['store', 'sku', 'date', 'sales_units', 'sales_rub']
+        ).iloc[-1, :]])[0]
+        sales_units = list(model_input['sales_units'])
+        sales_units[-1] = round(predicted)
+        model_input['sales_units'] = sales_units
     return list(model_input.tail(14)['sales_units'])
 
 
