@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
 
@@ -35,6 +36,10 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# Logs and temporary files
+*.log
+*.swp
 
 # Unit test / coverage reports
 htmlcov/
@@ -144,9 +149,20 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+.vscode
+
 # PyCharm
-#  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# macOS
+.DS_Store
+
+# User-specific files
+.bash_history
+.bash_sessions/
+.python_history
+.cache/
+.history/

@@ -17,7 +17,9 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     holiday_df = pd.read_csv('./holidays_covid_calendar.csv').drop(
         columns=['year', 'day', 'weekday', 'calday', 'covid']
     )
-    holiday_df['date'] = pd.to_datetime(holiday_df['date'])
+    #holiday_df['date'] = pd.to_datetime(holiday_df['date'])
+    holiday_df['date'] = pd.to_datetime(holiday_df['date'], format="%m.%d.%Y", errors='coerce')
+
     mapping = pd.read_csv('./mapping.csv')
     model_input = pd.DataFrame({
         'store': [store_info['store']] * 14,
@@ -42,13 +44,13 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     model_input = fillna_lag_rolling_features(model_input)
     product_mapping = mapping[mapping['pr_sku_id'] == item_info['sku']]
     store_mapping = mapping[mapping['st_id'] == store_info['store']]
-    if (len(product_mapping) != 0):
+    if len(product_mapping) != 0:
         model_input['pr_cluster_label'] = list(
             product_mapping['pr_cluster_label'].unique()
         )[0]
     else:
         model_input['pr_cluster_label'] = mapping['pr_cluster_label'].max() + 1
-    if (len(store_mapping) != 0):
+    if len(store_mapping) != 0:
         model_input['st_cluster_label'] = list(
             store_mapping['st_cluster_label'].unique()
         )[0]
@@ -58,13 +60,13 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     else:
         model_input['st_cluster_label'] = mapping['st_cluster_label'].max() + 1
         model_input['st_id_encoded'] = mapping['st_id_encoded'].max() + 1
-    if(len(product_mapping) != 0):
+    if len(product_mapping) != 0:
         model_input['pr_sku_id_encoded'] = list(
             product_mapping['pr_sku_id_encoded'].unique()
         )[0]
     else:
         model_input['pr_sku_id_encoded'] = mapping['pr_sku_id_encoded']
-    if (len(store_mapping) != 0):
+    if len(store_mapping) != 0:
         model_input['st_sku_interaction'] = list(
             store_mapping['st_sku_interaction'].unique()
         )[0]

@@ -12,7 +12,7 @@ URL_STORES = "shops"
 URL_FORECAST = "forecast"
 
 api_port = os.environ.get("API_PORT", "8000")
-api_host = os.environ.get("API_PORT", "localhost")
+api_host = os.environ.get("API_HOST", "localhost")
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def get_address(resource):
 
 
 def get_stores():
-    return json.load(open("../backend/stores.json"))["data"]
+    #return json.load(open("../backend/stores.json"))["data"]
     stores_url = get_address(URL_STORES)
     resp = requests.get(stores_url)
     if resp.status_code != 200:
@@ -61,7 +61,7 @@ def get_sales(store=None, sku=None):
 
 
 def get_categs_info():
-    return {el["sku"]: el for el in json.load(open("../backend/categories.json"))["data"]}
+    #return {el["sku"]: el for el in json.load(open("../backend/categories.json"))["data"]}
     categs_url = get_address(URL_CATEGORIES)
     resp = requests.get(categs_url)
     if resp.status_code != 200:
@@ -86,10 +86,10 @@ def main(today=date.today()):
                            "forecast": {"sku": item["sku"],
                                         "sales_units": {k: v for k, v in zip(forecast_dates, prediction)}
                                         }
-                          })
-        #requests.post(get_address(URL_FORECAST), json={"data": result})
+                           })
+        requests.post(get_address(URL_FORECAST), json={"data": result})
 
 
 if __name__ == "__main__":
-    #setup_logging()
+    setup_logging()
     main()

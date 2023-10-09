@@ -54,6 +54,7 @@ def get_stores(city=None, cat=None) -> dict:
 class Forecast(BaseModel):
     data: List
 
+
 @app.post("/forecast")
 def save_forecast(data: Forecast) -> dict:
     """save forecast results in file"""
@@ -78,15 +79,17 @@ def save_forecast(data: Forecast) -> dict:
                                       "2023-09-13": 0,
                                       "2023-09-14": 0
                                       }}}]}
-<<<<<<< HEAD
-    json.dump(forecast, open('forecast_archive.json', 'a'))
-    app_logger.info(f'successfully added')
-=======
-    json.dump(forecast, open('forecast_archive.json', 'w'))
-    _logger.info(f'successfully added')
->>>>>>> 29a5b356633578b740106c532deba9fd004d17ee
-    status = 'success'
-    return {"status": status}
+
+
+# <<<<<<< HEAD
+#     json.dump(forecast, open('forecast_archive.json', 'a'))
+#     app_logger.info(f'successfully added')
+# =======
+#     json.dump(forecast, open('forecast_archive.json', 'w'))
+#     _logger.info(f'successfully added')
+# >>>>>>> 29a5b356633578b740106c532deba9fd004d17ee
+#     status = 'success'
+#     return {"status": status}
 
 
 @app.get("/forecast")
