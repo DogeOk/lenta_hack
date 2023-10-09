@@ -2,7 +2,6 @@ import requests
 import os
 import logging
 from datetime import date, timedelta
-from tqdm import tqdm
 
 from model import forecast
 
@@ -67,7 +66,7 @@ def main(today=date.today()):
     forecast_dates = [today + timedelta(days=d) for d in range(1, 15)]
     forecast_dates = [el.strftime("%Y-%m-%d") for el in forecast_dates]
     categs_info = get_categs_info()
-    for store in tqdm(get_stores()):
+    for store in get_stores():
         result = []
         for item in get_sales(store=store["store"]):
             item_info = categs_info[item["sku"]]
