@@ -81,28 +81,17 @@ def save_forecast(data: Forecast) -> dict:
                                       }}}]}
 
 
-# <<<<<<< HEAD
-#     json.dump(forecast, open('forecast_archive.json', 'a'))
-#     app_logger.info(f'successfully added')
-# =======
-#     json.dump(forecast, open('forecast_archive.json', 'w'))
-#     _logger.info(f'successfully added')
-# >>>>>>> 29a5b356633578b740106c532deba9fd004d17ee
-#     status = 'success'
-#     return {"status": status}
-
-
 @app.get("/forecast")
 def load_forecast() -> dict:
     """load forecast results from file"""
     try:
         f = open('forecast_archive.json', 'r')
         result = json.load(f)
-        _logger.info(f'successfully loaded')
+        _logger.info('successfully loaded')
         status = 'success'
     except FileNotFoundError:
         result = 'no data'
-        _logger.error(f'archive not available')
+        _logger.error('archive not available')
         status = 'fail'
     return {"status": status, "data": result}
 
