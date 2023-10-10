@@ -18,13 +18,11 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     holiday_df = pd.read_csv('./holidays_covid_calendar.csv').drop(
         columns=['year', 'day', 'weekday', 'calday', 'covid']
     )
-    #holiday_df['date'] = pd.to_datetime(holiday_df['date'])
-    holiday_df['date'] = pd.to_datetime(holiday_df['date'])
+    holiday_df['date'] = pd.to_datetime(holiday_df['date'], format="%d.%m.%Y")
     mapping = pd.read_csv('./mapping.csv')
     model_input = pd.DataFrame({
         'store': [store_info['store']] * 14,
-        'sku': [item_info['sku']] * 14,
-        'date': [date.today() + timedelta(days=d) for d in range(1, 15)],
+        'sku': [item_info['sku']] * 14,        'date': [date.today() + timedelta(days=d) for d in range(1, 15)],
         'sales_units': [0] * 14,
         'sales_rub': [0] * 14
     })
